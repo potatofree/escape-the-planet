@@ -2,7 +2,7 @@ import React from 'react';
 
 export const Game = (props) => {
   if (props.gameState)
-    return <p>Game started!</p>;
+    return <p>Game status: Started</p>;
   else
-    return <p>Kak tyt xodit?</p>;
+    return <p>Game status: Not Started</p>;
 };
