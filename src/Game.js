@@ -12,7 +12,7 @@ export const Game = (props) => {
     const materialsInc = [0, 1, 1, 2, 2, 3];
     const materialsRand = Math.floor(materialsInc.length * Math.random());
     setMaterials((materials) => materials + materialsInc[materialsRand]);
-    gameLog("materials", materialsInc[materialsRand]);
+    gameLog("materials", materialsInc[materialsRand], counter);
   };
   const handleResources = () => {
     counterInc();
@@ -22,7 +22,7 @@ export const Game = (props) => {
     setResources((resources) =>
       resources.map((resource, i) => (resource += resAdd[i]))
     );
-    gameLog("resources", resAdd);
+    gameLog("resources", resAdd, counter);
   };
   if (props.gameState)
     return (
