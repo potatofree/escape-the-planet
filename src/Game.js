@@ -7,6 +7,7 @@ export const Game = (props) => {
   const [resources, setResources] = useState([0, 0, 0]);
   const [counter, setCounter] = useState(0);
   const [logs, dispatchLogs] = useReducer(logsReducer, []);
+  const [exploring, setExploring] = useState(false);
 
   const counterInc = () => setCounter((counter) => counter + 1);
   const handleMaterials = () => {
@@ -30,6 +31,18 @@ export const Game = (props) => {
     );
     dispatchLogs({ type: "resources", counter: counter, resources: resAdd });
   };
+
+  const handleStartExplore = () => {
+    setExploring(true);
+    counterInc();
+    dispatchLogs({ type: "exploring start", counter: counter });
+  };
+
+  const handleStopExplore = () => {
+    setExploring(false);
+    counterInc();
+    dispatchLogs({ type: "exploring stop", counter: counter });
+  };
   if (props.gameState)
     return (
       <>
@@ -38,6 +51,12 @@ export const Game = (props) => {
           <p>Days: {counter}</p>
           <Button onClick={handleMaterials}>Harvest Materials</Button>
           <Button onClick={handleResources}>Gather Resources</Button>
+          <Button onClick={handleStartExplore} disabled={exploring}>
+            Explore the planet
+          </Button>
+          {exploring ? (
+            <Button onClick={handleStopExplore}>Return to base</Button>
+          ) : null}
           <p>Materials: {materials}</p>
           <p>
             Resources:{" "}
