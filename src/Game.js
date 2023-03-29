@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { Button } from "react-bootstrap";
-import { logs, gameLog } from "./gameLog";
+import { logsReducer } from "./logsReducer";
 
 export const Game = (props) => {
   const [materials, setMaterials] = useState(0);
   const [resources, setResources] = useState([0, 0, 0]);
   const [counter, setCounter] = useState(0);
-  const counterInc = () => setCounter(counter + 1);
+  const [logs, dispatchLogs] = useReducer(logsReducer, []);
+
+  const counterInc = () => setCounter((counter) => counter + 1);
   const handleMaterials = () => {
     counterInc();
     const materialsInc = [0, 1, 1, 2, 2, 3];
     const materialsRand = Math.floor(materialsInc.length * Math.random());
     setMaterials((materials) => materials + materialsInc[materialsRand]);
-    gameLog("materials", materialsInc[materialsRand], counter);
+    dispatchLogs({
+      type: "materials",
+      counter: counter,
+      materials: materialsInc[materialsRand],
+    });
   };
   const handleResources = () => {
     counterInc();
@@ -22,7 +28,7 @@ export const Game = (props) => {
     setResources((resources) =>
       resources.map((resource, i) => (resource += resAdd[i]))
     );
-    gameLog("resources", resAdd, counter);
+    dispatchLogs({ type: "resources", counter: counter, resources: resAdd });
   };
   if (props.gameState)
     return (
