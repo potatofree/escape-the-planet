@@ -49,14 +49,20 @@ export const Game = (props) => {
         <div>
           <p>Game status: Started</p>
           <p>Days: {counter}</p>
-          <Button onClick={handleMaterials}>Harvest Materials</Button>
-          <Button onClick={handleResources}>Gather Resources</Button>
-          <Button onClick={handleStartExplore} disabled={exploring}>
-            Explore the planet
+          <Button onClick={handleMaterials} disabled={exploring}>
+            Harvest Materials
           </Button>
+          <Button onClick={handleResources} disabled={exploring}>
+            Gather Resources
+          </Button>
+
           {exploring ? (
             <Button onClick={handleStopExplore}>Return to base</Button>
-          ) : null}
+          ) : (
+            <Button onClick={handleStartExplore} disabled={exploring}>
+              Explore the planet
+            </Button>
+          )}
           <p>Materials: {materials}</p>
           <p>
             Resources:{" "}
