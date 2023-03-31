@@ -10,8 +10,16 @@ export const logsReducer = (logs, action) => {
         .join(", ")}`;
       return [newStep, ...logs];
     }
+    case "exploring start": {
+      const newStep = `${action.counter}: Exploring started`;
+      return [newStep, ...logs];
+    }
+    case "exploring stop": {
+      const newStep = `${action.counter}: You returned to the base from the exploring`;
+      return [newStep, ...logs];
+    }
     default: {
-      return [`${action} happend`, ...logs];
+      return [`${JSON.stringify(action)} happend`, ...logs];
     }
   }
 };

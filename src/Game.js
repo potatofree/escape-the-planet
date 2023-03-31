@@ -7,6 +7,8 @@ export const Game = (props) => {
   const [resources, setResources] = useState([0, 0, 0]);
   const [counter, setCounter] = useState(0);
   const [logs, dispatchLogs] = useReducer(logsReducer, []);
+  const [exploring, setExploring] = useState(false);
+  const [exploringLogs, setExploringLogs] = useState([]);
 
   const counterInc = () => setCounter((counter) => counter + 1);
   const handleMaterials = () => {
@@ -30,14 +32,59 @@ export const Game = (props) => {
     );
     dispatchLogs({ type: "resources", counter: counter, resources: resAdd });
   };
+
+  const handleStartExplore = () => {
+    setExploring(true);
+    setExploringLogs([{ stepNumber: 0, step: "Exploring began" }]);
+    counterInc();
+    dispatchLogs({ type: "exploring start", counter: counter });
+  };
+
+  const handleStopExplore = () => {
+    setExploring(false);
+    counterInc();
+    dispatchLogs({ type: "exploring stop", counter: counter });
+  };
+
+  const handleExploringWalk = () => {
+    setExploringLogs((exploringLogs) => {
+      const stepNumber = exploringLogs[0].stepNumber + 1;
+      return [
+        { stepNumber: stepNumber, step: "You went further" },
+        ...exploringLogs,
+      ];
+    });
+  };
+  const handleExploringSearch = () => {
+    setExploringLogs((exploringLogs) => {
+      const stepNumber = exploringLogs[0].stepNumber + 1;
+      return [
+        { stepNumber: stepNumber, step: "You looked around" },
+        ...exploringLogs,
+      ];
+    });
+  };
+
   if (props.gameState)
     return (
       <>
         <div>
           <p>Game status: Started</p>
           <p>Days: {counter}</p>
-          <Button onClick={handleMaterials}>Harvest Materials</Button>
-          <Button onClick={handleResources}>Gather Resources</Button>
+          <Button onClick={handleMaterials} disabled={exploring}>
+            Harvest Materials
+          </Button>
+          <Button onClick={handleResources} disabled={exploring}>
+            Gather Resources
+          </Button>
+
+          {exploring ? (
+            <Button onClick={handleStopExplore}>Return to base</Button>
+          ) : (
+            <Button onClick={handleStartExplore} disabled={exploring}>
+              Explore the planet
+            </Button>
+          )}
           <p>Materials: {materials}</p>
           <p>
             Resources:{" "}
@@ -47,11 +94,24 @@ export const Game = (props) => {
           </p>
         </div>
         <hr />
-        <>
-          {logs.map((e) => (
-            <p>{e}</p>
-          ))}
-        </>
+        {exploring ? (
+          <>
+            <div className="Exploring">Now the exploring began:</div>
+            <Button onClick={handleExploringWalk}>Go ahead</Button>
+            <Button onClick={handleExploringSearch}>Look around</Button>
+            {exploringLogs.map((e) => (
+              <p>
+                {e.stepNumber}: {e.step}
+              </p>
+            ))}
+          </>
+        ) : (
+          <>
+            {logs.map((e) => (
+              <p>{e}</p>
+            ))}
+          </>
+        )}
       </>
     );
   else return <p>Game status: Not Started</p>;
