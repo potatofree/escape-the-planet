@@ -4,7 +4,7 @@ import { logsReducer } from "./logsReducer";
 
 export const Game = (props) => {
   const [materials, setMaterials] = useState(0);
-  const [resources, setResources] = useState([0, 0, 0]);
+  const [resources, setResources] = useState({ Air: 0, Food: 0, Energy: 0 });
   const [counter, setCounter] = useState(0);
   const [logs, dispatchLogs] = useReducer(logsReducer, []);
   const [exploring, setExploring] = useState(false);
@@ -25,12 +25,20 @@ export const Game = (props) => {
   const handleResources = () => {
     counterInc();
     const resInc = [0, 1, 1, 1, 2, 2, 2, 3, 3, 4];
-    const resRand = () => Math.floor(resInc.length * Math.random());
-    const resAdd = [0, 0, 0].map((e) => resInc[resRand()]);
-    setResources((resources) =>
-      resources.map((resource, i) => (resource += resAdd[i]))
-    );
-    dispatchLogs({ type: "resources", counter: counter, resources: resAdd });
+    const resRand = () => resInc[Math.floor(resInc.length * Math.random())];
+    const resAdd = { Air: resRand(), Food: resRand(), Energy: resRand() };
+    setResources((resources) => {
+      return {
+        Air: resources.Air + resAdd.Air,
+        Food: resources.Food + resAdd.Food,
+        Energy: resources.Energy + resAdd.Energy,
+      };
+    });
+    dispatchLogs({
+      type: "resources",
+      counter: counter,
+      resources: resAdd,
+    });
   };
 
   const handleStartExplore = () => {
@@ -87,10 +95,8 @@ export const Game = (props) => {
           )}
           <p>Materials: {materials}</p>
           <p>
-            Resources:{" "}
-            {resources.map((e) => (
-              <> {e} </>
-            ))}
+            Resources: Air:{resources.Air}, Food:{resources.Food}, Energy:
+            {resources.Energy}
           </p>
         </div>
         <hr />

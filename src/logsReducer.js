@@ -5,9 +5,13 @@ export const logsReducer = (logs, action) => {
       return [newStep, ...logs];
     }
     case "resources": {
-      const newStep = `${action.counter}: You've got ${action.resources
-        .map((res, i) => "res_" + i + ":" + res)
-        .join(", ")}`;
+      let gainedResources = [];
+      for (let resource in action.resources) {
+        gainedResources.push(`${resource}: ${action.resources[resource]}`);
+      }
+      const newStep = `${action.counter} You've gained ${gainedResources.join(
+        ", "
+      )}`;
       return [newStep, ...logs];
     }
     case "exploring start": {
