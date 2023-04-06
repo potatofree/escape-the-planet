@@ -1,5 +1,10 @@
 import React, { useState, useReducer } from "react";
 import { Button } from "react-bootstrap";
+import {
+  materialsGatheringIncrement,
+  resourcesGainingIncrement,
+  exploringResourcesLimit,
+} from "./game_config";
 import { logsReducer } from "./logsReducer";
 
 export const Game = (props) => {
@@ -13,7 +18,7 @@ export const Game = (props) => {
   const counterInc = () => setCounter((counter) => counter + 1);
   const handleMaterials = () => {
     counterInc();
-    const materialsInc = [0, 1, 1, 2, 2, 3];
+    const materialsInc = materialsGatheringIncrement;
     const materialsRand = Math.floor(materialsInc.length * Math.random());
     setMaterials((materials) => materials + materialsInc[materialsRand]);
     dispatchLogs({
@@ -24,7 +29,7 @@ export const Game = (props) => {
   };
   const handleResources = () => {
     counterInc();
-    const resInc = [0, 1, 1, 1, 2, 2, 2, 3, 3, 4];
+    const resInc = resourcesGainingIncrement;
     const resRand = () => resInc[Math.floor(resInc.length * Math.random())];
     const resAdd = { Air: resRand(), Food: resRand(), Energy: resRand() };
     setResources((resources) => {
@@ -54,6 +59,16 @@ export const Game = (props) => {
     dispatchLogs({ type: "exploring stop", counter: counter });
   };
 
+  const exploringConditions = () => {
+    const resLim = exploringResourcesLimit;
+    let cond = true;
+    for (let res in resLim) {
+      cond = cond && resLim[res] <= resources[res];
+    }
+    console.log(cond);
+    return cond;
+  };
+
   const handleExploringWalk = () => {
     setExploringLogs((exploringLogs) => {
       const stepNumber = exploringLogs[0].stepNumber + 1;
@@ -67,7 +82,7 @@ export const Game = (props) => {
     setExploringLogs((exploringLogs) => {
       const stepNumber = exploringLogs[0].stepNumber + 1;
       return [
-        { stepNumber: stepNumber, step: "You looked around" },
+        { stepNumber: stepNumber, step: "You've looked around" },
         ...exploringLogs,
       ];
     });
@@ -89,7 +104,10 @@ export const Game = (props) => {
           {exploring ? (
             <Button onClick={handleStopExplore}>Return to base</Button>
           ) : (
-            <Button onClick={handleStartExplore} disabled={exploring}>
+            <Button
+              onClick={handleStartExplore}
+              disabled={!exploringConditions()}
+            >
               Explore the planet
             </Button>
           )}
