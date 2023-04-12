@@ -4,6 +4,7 @@ import {
   materialsGatheringIncrement,
   resourcesGainingIncrement,
   exploringResourcesLimit,
+  exploringCost,
 } from "./game_config";
 import { logsReducer } from "./logsReducer";
 
@@ -16,7 +17,16 @@ export const Game = (props) => {
   const [exploringLogs, setExploringLogs] = useState([]);
 
   const counterInc = () => setCounter((counter) => counter + 1);
-  const handleMaterials = () => {
+  const resourcesUpdate = (cost) => {
+    setResources((resources) => {
+      let newResources = {};
+      for (let resource in cost) {
+        newResources[resource] = resources[resource] + cost[resource];
+      }
+      return { ...resources, ...newResources };
+    });
+  };
+  const handleMaterialsButton = () => {
     counterInc();
     const materialsInc = materialsGatheringIncrement;
     const materialsRand = Math.floor(materialsInc.length * Math.random());
@@ -27,18 +37,12 @@ export const Game = (props) => {
       materials: materialsInc[materialsRand],
     });
   };
-  const handleResources = () => {
+  const handleResourcesButton = () => {
     counterInc();
     const resInc = resourcesGainingIncrement;
     const resRand = () => resInc[Math.floor(resInc.length * Math.random())];
     const resAdd = { Air: resRand(), Food: resRand(), Energy: resRand() };
-    setResources((resources) => {
-      return {
-        Air: resources.Air + resAdd.Air,
-        Food: resources.Food + resAdd.Food,
-        Energy: resources.Energy + resAdd.Energy,
-      };
-    });
+    resourcesUpdate(resAdd);
     dispatchLogs({
       type: "resources",
       counter: counter,
@@ -70,6 +74,7 @@ export const Game = (props) => {
   };
 
   const handleExploringWalk = () => {
+    resourcesUpdate(exploringCost.Walk);
     setExploringLogs((exploringLogs) => {
       const stepNumber = exploringLogs[0].stepNumber + 1;
       return [
@@ -79,6 +84,7 @@ export const Game = (props) => {
     });
   };
   const handleExploringSearch = () => {
+    resourcesUpdate(exploringCost.Search);
     setExploringLogs((exploringLogs) => {
       const stepNumber = exploringLogs[0].stepNumber + 1;
       return [
@@ -94,10 +100,10 @@ export const Game = (props) => {
         <div>
           <p>Game status: Started</p>
           <p>Days: {counter}</p>
-          <Button onClick={handleMaterials} disabled={exploring}>
+          <Button onClick={handleMaterialsButton} disabled={exploring}>
             Harvest Materials
           </Button>
-          <Button onClick={handleResources} disabled={exploring}>
+          <Button onClick={handleResourcesButton} disabled={exploring}>
             Gather Resources
           </Button>
 
