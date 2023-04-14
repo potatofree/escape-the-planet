@@ -1,5 +1,5 @@
 import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.css";
 import Button from "react-bootstrap/Button";
 import React, { useState } from "react";
 import { Game } from "./Game";
@@ -14,6 +14,7 @@ const App = () => {
     <div className="App">
       <header className="App-header">
         <Button
+          className="Start-Game-button"
           onClick={handleStartButtonClick}
           variant={gameState ? "danger" : "primary"}
         >

@@ -1,5 +1,9 @@
+import "./Game.css";
 import React, { useState, useReducer } from "react";
 import { Button } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import {
   materialsGatheringIncrement,
   resourcesGainingIncrement,
@@ -96,53 +100,72 @@ export const Game = (props) => {
 
   if (props.gameState)
     return (
-      <>
-        <div>
-          <p>Game status: Started</p>
-          <p>Days: {counter}</p>
-          <Button onClick={handleMaterialsButton} disabled={exploring}>
-            Harvest Materials
-          </Button>
-          <Button onClick={handleResourcesButton} disabled={exploring}>
-            Gather Resources
-          </Button>
-
-          {exploring ? (
-            <Button onClick={handleStopExplore}>Return to base</Button>
-          ) : (
-            <Button
-              onClick={handleStartExplore}
-              disabled={!exploringConditions()}
-            >
-              Explore the planet
+      <Container>
+        <Row>
+          <Col>
+            <p>Game status: Started</p>
+          </Col>
+          <Col>
+            <p>Days: {counter}</p>
+          </Col>
+        </Row>
+        <Row>
+          <Col>Materials: {materials}</Col>
+          <Col>
+            <p>
+              Resources: Air:{resources.Air}, Food:{resources.Food}, Energy:
+              {resources.Energy}
+            </p>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Button onClick={handleMaterialsButton} disabled={exploring}>
+              Harvest Materials
             </Button>
-          )}
-          <p>Materials: {materials}</p>
-          <p>
-            Resources: Air:{resources.Air}, Food:{resources.Food}, Energy:
-            {resources.Energy}
-          </p>
-        </div>
+          </Col>
+          <Col>
+            <Button onClick={handleResourcesButton} disabled={exploring}>
+              Gather Resources
+            </Button>
+          </Col>
+          <Col>
+            {exploring ? (
+              <Button onClick={handleStopExplore}>Return to base</Button>
+            ) : (
+              <Button
+                onClick={handleStartExplore}
+                disabled={!exploringConditions()}
+              >
+                Explore the planet
+              </Button>
+            )}
+          </Col>
+        </Row>
+
         <hr />
-        {exploring ? (
-          <>
-            <div className="Exploring">Now the exploring began:</div>
-            <Button onClick={handleExploringWalk}>Go ahead</Button>
-            <Button onClick={handleExploringSearch}>Look around</Button>
-            {exploringLogs.map((e) => (
-              <p>
-                {e.stepNumber}: {e.step}
-              </p>
-            ))}
-          </>
-        ) : (
-          <>
+        <Row>
+          <Col>
             {logs.map((e) => (
               <p>{e}</p>
             ))}
-          </>
-        )}
-      </>
+          </Col>
+          <Col>
+            {exploring ? (
+              <>
+                <div className="Exploring">Now the exploring began:</div>
+                <Button onClick={handleExploringWalk}>Go ahead</Button>
+                <Button onClick={handleExploringSearch}>Look around</Button>
+                {exploringLogs.map((e) => (
+                  <p>
+                    {e.stepNumber}: {e.step}
+                  </p>
+                ))}
+              </>
+            ) : null}
+          </Col>
+        </Row>
+      </Container>
     );
   else return <p>Game status: Not Started</p>;
 };
