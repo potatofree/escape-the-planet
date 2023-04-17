@@ -105,18 +105,16 @@ export const Game = (props) => {
           <Col>
             <p>Game status: Started</p>
           </Col>
+          <Col sm="6"></Col>
           <Col>
             <p>Days: {counter}</p>
           </Col>
         </Row>
         <Row>
           <Col>Materials: {materials}</Col>
-          <Col>
-            <p>
-              Resources: Air:{resources.Air}, Food:{resources.Food}, Energy:
-              {resources.Energy}
-            </p>
-          </Col>
+          <Col>Air: {resources.Air}</Col>
+          <Col>Food: {resources.Food}</Col>
+          <Col>Energy: {resources.Energy}</Col>
         </Row>
         <Row>
           <Col>
