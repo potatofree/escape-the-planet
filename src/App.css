@@ -16,3 +16,14 @@
 .Start-Game-button {
   margin-right: 10%;
 }
+.exploring-buttons {
+  margin: 1%;
+}
+.exploring-section-top {
+  border: 2;
+  background-color: aquamarine;
+  outline: #282c34;
+}
+.exploring-logs {
+  font-style: italic;
+}

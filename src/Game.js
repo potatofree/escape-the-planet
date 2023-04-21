@@ -1,4 +1,3 @@
-import "./Game.css";
 import React, { useState, useReducer } from "react";
 import { Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
@@ -153,17 +152,43 @@ export const Game = (props) => {
               </Row>
             ))}
           </Col>
-          <Col>
+          <Col className="exploring-section">
             {exploring ? (
               <>
-                <div className="Exploring">Now the exploring began:</div>
-                <Button onClick={handleExploringWalk}>Go ahead</Button>
-                <Button onClick={handleExploringSearch}>Look around</Button>
-                {exploringLogs.map((e) => (
-                  <p>
-                    {e.stepNumber}: {e.step}
-                  </p>
-                ))}
+                <div className="exploring-section-top">
+                  <b>Exploration</b>
+                  <Row>
+                    <Col>
+                      <Button
+                        className="exploring-buttons"
+                        onClick={handleExploringWalk}
+                      >
+                        Go ahead
+                      </Button>
+                      <Button
+                        className="exploring-buttons"
+                        onClick={handleExploringSearch}
+                      >
+                        Look around
+                      </Button>
+                      <Button
+                        className="exploring-buttons"
+                        onClick={handleStopExplore}
+                        variant="dark"
+                      >
+                        Return to Base
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
+                <div className="exploring-logs">
+                  {exploringLogs.map((e) => (
+                    <Row>
+                      <Col sm="4">{e.stepNumber}:</Col>
+                      <Col sm="4">{e.step}</Col>
+                    </Row>
+                  ))}
+                </div>
               </>
             ) : null}
           </Col>
