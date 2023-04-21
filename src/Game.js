@@ -111,23 +111,23 @@ export const Game = (props) => {
           </Col>
         </Row>
         <Row>
-          <Col>Materials: {materials}</Col>
-          <Col>Air: {resources.Air}</Col>
-          <Col>Food: {resources.Food}</Col>
-          <Col>Energy: {resources.Energy}</Col>
+          <Col sm="2">Materials: {materials}</Col>
+          <Col sm="2">Air: {resources.Air}</Col>
+          <Col sm="2">Food: {resources.Food}</Col>
+          <Col sm="2">Energy: {resources.Energy}</Col>
         </Row>
         <Row>
-          <Col>
+          <Col sm="auto">
             <Button onClick={handleMaterialsButton} disabled={exploring}>
               Harvest Materials
             </Button>
           </Col>
-          <Col>
+          <Col sm="auto">
             <Button onClick={handleResourcesButton} disabled={exploring}>
               Gather Resources
             </Button>
           </Col>
-          <Col>
+          <Col sm="auto">
             {exploring ? (
               <Button onClick={handleStopExplore}>Return to base</Button>
             ) : (
@@ -145,7 +145,12 @@ export const Game = (props) => {
         <Row>
           <Col>
             {logs.map((e) => (
-              <p>{e}</p>
+              <Row>
+                <Col>
+                  <b>{e.stepNumber}:</b>
+                </Col>
+                <Col>{e.step}</Col>
+              </Row>
             ))}
           </Col>
           <Col>

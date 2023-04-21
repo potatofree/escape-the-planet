@@ -1,7 +1,11 @@
 export const logsReducer = (logs, action) => {
+  const newStep = {
+    stepNumber: action.counter ? action.counter : "DATE unknown",
+    step: "Something happend",
+  };
   switch (action.type) {
     case "materials": {
-      const newStep = `${action.counter} You've got ${action.materials} materials`;
+      newStep.step = `You've got ${action.materials} materials`;
       return [newStep, ...logs];
     }
     case "resources": {
@@ -9,21 +13,20 @@ export const logsReducer = (logs, action) => {
       for (let resource in action.resources) {
         gainedResources.push(`${resource}: ${action.resources[resource]}`);
       }
-      const newStep = `${action.counter} You've gained ${gainedResources.join(
-        ", "
-      )}`;
+      newStep.step = `You've gained ${gainedResources.join(", ")}`;
       return [newStep, ...logs];
     }
     case "exploring start": {
-      const newStep = `${action.counter}: Exploring started`;
+      newStep.step = `Exploring started`;
       return [newStep, ...logs];
     }
     case "exploring stop": {
-      const newStep = `${action.counter}: You returned to the base from the exploring`;
+      newStep.step = `You returned to the base from the exploring`;
       return [newStep, ...logs];
     }
     default: {
-      return [`${JSON.stringify(action)} happend`, ...logs];
+      newStep.step = `${JSON.stringify(action)} happend`;
+      return [newStep, ...logs];
     }
   }
 };
