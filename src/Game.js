@@ -3,6 +3,9 @@ import { Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import Card from "react-bootstrap/Card";
 import {
   materialsGatheringIncrement,
   resourcesGainingIncrement,
@@ -99,101 +102,105 @@ export const Game = (props) => {
 
   if (props.gameState)
     return (
-      <Container>
-        <Row>
-          <Col>
-            <p>Game status: Started</p>
-          </Col>
-          <Col sm="6"></Col>
-          <Col>
-            <p>Days: {counter}</p>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm="2">Materials: {materials}</Col>
-          <Col sm="2">Air: {resources.Air}</Col>
-          <Col sm="2">Food: {resources.Food}</Col>
-          <Col sm="2">Energy: {resources.Energy}</Col>
-        </Row>
-        <Row>
-          <Col sm="auto">
-            <Button onClick={handleMaterialsButton} disabled={exploring}>
-              Harvest Materials
-            </Button>
-          </Col>
-          <Col sm="auto">
-            <Button onClick={handleResourcesButton} disabled={exploring}>
-              Gather Resources
-            </Button>
-          </Col>
-          <Col sm="auto">
-            {exploring ? (
-              <Button onClick={handleStopExplore}>Return to base</Button>
-            ) : (
-              <Button
-                onClick={handleStartExplore}
-                disabled={!exploringConditions()}
-              >
-                Explore the planet
-              </Button>
-            )}
-          </Col>
-        </Row>
-
-        <hr />
-        <Row>
-          <Col>
-            {logs.map((e) => (
-              <Row>
+      <>
+        <Navbar sticky="top" bg="light">
+          <Container>
+            <Navbar.Text>Materials: {materials}</Navbar.Text>
+            <Navbar.Text>Air: {resources.Air}</Navbar.Text>
+            <Navbar.Text>Food: {resources.Food}</Navbar.Text>
+            <Navbar.Text>Energy: {resources.Energy}</Navbar.Text>
+            <Navbar.Toggle />
+            <Nav.Item>
+              Days: <b>{counter}</b>
+            </Nav.Item>
+          </Container>
+        </Navbar>
+        <Container>
+          <Navbar bg="dark" fixed="bottom">
+            <Container>
+              <Col sm="2">
+                <Button onClick={handleMaterialsButton} disabled={exploring}>
+                  Harvest Materials
+                </Button>
+              </Col>
+              <Col sm="2">
+                <Button onClick={handleResourcesButton} disabled={exploring}>
+                  Gather Resources
+                </Button>
+              </Col>
+              <Col sm="2">
+                {exploring ? (
+                  <Button onClick={handleStopExplore}>Return to base</Button>
+                ) : (
+                  <Button
+                    onClick={handleStartExplore}
+                    disabled={!exploringConditions()}
+                  >
+                    Explore the planet
+                  </Button>
+                )}
+              </Col>
+            </Container>
+          </Navbar>
+          <Row>
+            <Col>
+              <Card>
                 <Col>
-                  <b>{e.stepNumber}:</b>
-                </Col>
-                <Col>{e.step}</Col>
-              </Row>
-            ))}
-          </Col>
-          <Col className="exploring-section">
-            {exploring ? (
-              <>
-                <div className="exploring-section-top">
-                  <b>Exploration</b>
-                  <Row>
-                    <Col>
-                      <Button
-                        className="exploring-buttons"
-                        onClick={handleExploringWalk}
-                      >
-                        Go ahead
-                      </Button>
-                      <Button
-                        className="exploring-buttons"
-                        onClick={handleExploringSearch}
-                      >
-                        Look around
-                      </Button>
-                      <Button
-                        className="exploring-buttons"
-                        onClick={handleStopExplore}
-                        variant="dark"
-                      >
-                        Return to Base
-                      </Button>
-                    </Col>
-                  </Row>
-                </div>
-                <div className="exploring-logs">
-                  {exploringLogs.map((e) => (
+                  {logs.map((e) => (
                     <Row>
-                      <Col sm="4">{e.stepNumber}:</Col>
-                      <Col sm="4">{e.step}</Col>
+                      <Col>
+                        <b>{e.stepNumber}:</b>
+                      </Col>
+                      <Col>{e.step}</Col>
                     </Row>
                   ))}
-                </div>
-              </>
-            ) : null}
-          </Col>
-        </Row>
-      </Container>
+                </Col>
+              </Card>
+            </Col>
+            <Col>
+              <Card>
+                <Col className="exploring-section">
+                  {exploring ? (
+                    <>
+                      <Card.Header as="h5">Exploration</Card.Header>
+                      <Card.Body>
+                        <div className="exploring-logs">
+                          {exploringLogs.map((e) => (
+                            <Row>
+                              <Col sm="4">{e.stepNumber}:</Col>
+                              <Col sm="4">{e.step}</Col>
+                            </Row>
+                          ))}
+                        </div>
+
+                        <Button
+                          className="exploring-buttons"
+                          onClick={handleExploringWalk}
+                        >
+                          Go ahead
+                        </Button>
+                        <Button
+                          className="exploring-buttons"
+                          onClick={handleExploringSearch}
+                        >
+                          Look around
+                        </Button>
+                        <Button
+                          className="exploring-buttons"
+                          onClick={handleStopExplore}
+                          variant="dark"
+                        >
+                          Return to Base
+                        </Button>
+                      </Card.Body>
+                    </>
+                  ) : null}
+                </Col>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      </>
     );
-  else return <p>Game status: Not Started</p>;
+  else return null;
 };
