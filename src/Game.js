@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -11,6 +11,7 @@ import {
   resourcesGainingIncrement,
   exploringResourcesLimit,
   exploringCost,
+  logPage,
 } from "./game_config";
 import { logsReducer } from "./logsReducer";
 
@@ -21,6 +22,7 @@ export const Game = (props) => {
   const [logs, dispatchLogs] = useReducer(logsReducer, []);
   const [exploring, setExploring] = useState(false);
   const [exploringLogs, setExploringLogs] = useState([]);
+  const [logPages, setLogPages] = useState(1);
 
   const counterInc = () => setCounter((counter) => counter + 1);
   const resourcesUpdate = (cost) => {
@@ -75,7 +77,6 @@ export const Game = (props) => {
     for (let res in resLim) {
       cond = cond && resLim[res] <= resources[res];
     }
-    console.log(cond);
     return cond;
   };
 
@@ -99,6 +100,32 @@ export const Game = (props) => {
       ];
     });
   };
+  const showMoreLogs = () => {
+    setLogPages((pages) => pages + 1);
+  };
+  // reset Long logs
+  useEffect(() => {
+    setLogPages(1);
+  }, [counter]);
+
+  const showLogs = (pages) => {
+    const pageSize = logPage * pages;
+    const showMore =
+      pageSize >= logs.length ? null : (
+        <Card.Link onClick={showMoreLogs}>Show More</Card.Link>
+      );
+    let shownLogs = logs.slice(0, pageSize).map((e) => {
+      return (
+        <Row>
+          <Col>
+            <b>{e.stepNumber}:</b>
+          </Col>
+          <Col>{e.step}</Col>
+        </Row>
+      );
+    });
+    return [...shownLogs, showMore];
+  };
 
   if (props.gameState)
     return (
@@ -116,7 +143,7 @@ export const Game = (props) => {
           </Container>
         </Navbar>
         <Container>
-          <Navbar bg="dark" fixed="bottom">
+          <Navbar bg="dark">
             <Container>
               <Col sm="2">
                 <Button onClick={handleMaterialsButton} disabled={exploring}>
@@ -142,63 +169,56 @@ export const Game = (props) => {
               </Col>
             </Container>
           </Navbar>
-          <Row>
-            <Col>
-              <Card>
-                <Col>
-                  {logs.map((e) => (
-                    <Row>
-                      <Col>
-                        <b>{e.stepNumber}:</b>
-                      </Col>
-                      <Col>{e.step}</Col>
-                    </Row>
-                  ))}
-                </Col>
-              </Card>
-            </Col>
-            <Col>
-              <Card>
-                <Col className="exploring-section">
-                  {exploring ? (
-                    <>
-                      <Card.Header as="h5">Exploration</Card.Header>
-                      <Card.Body>
-                        <div className="exploring-logs">
-                          {exploringLogs.map((e) => (
-                            <Row>
-                              <Col sm="4">{e.stepNumber}:</Col>
-                              <Col sm="4">{e.step}</Col>
-                            </Row>
-                          ))}
-                        </div>
+          <Container>
+            <Row>
+              <Col>
+                <Card>
+                  <Col>{showLogs(logPages)}</Col>
+                </Card>
+              </Col>
+              <Col>
+                <Card>
+                  <Col className="exploring-section">
+                    {exploring ? (
+                      <>
+                        <Card.Header as="h5">Exploration</Card.Header>
+                        <Card.Body>
+                          <div className="exploring-logs">
+                            {exploringLogs.map((e) => (
+                              <Row>
+                                <Col sm="4">{e.stepNumber}:</Col>
+                                <Col sm="4">{e.step}</Col>
+                              </Row>
+                            ))}
+                          </div>
 
-                        <Button
-                          className="exploring-buttons"
-                          onClick={handleExploringWalk}
-                        >
-                          Go ahead
-                        </Button>
-                        <Button
-                          className="exploring-buttons"
-                          onClick={handleExploringSearch}
-                        >
-                          Look around
-                        </Button>
-                        <Button
-                          className="exploring-buttons"
-                          onClick={handleStopExplore}
-                          variant="dark"
-                        >
-                          Return to Base
-                        </Button>
-                      </Card.Body>
-                    </>
-                  ) : null}
-                </Col>
-              </Card>
-            </Col>
-          </Row>
+                          <Button
+                            className="exploring-buttons"
+                            onClick={handleExploringWalk}
+                          >
+                            Go ahead
+                          </Button>
+                          <Button
+                            className="exploring-buttons"
+                            onClick={handleExploringSearch}
+                          >
+                            Look around
+                          </Button>
+                          <Button
+                            className="exploring-buttons"
+                            onClick={handleStopExplore}
+                            variant="dark"
+                          >
+                            Return to Base
+                          </Button>
+                        </Card.Body>
+                      </>
+                    ) : null}
+                  </Col>
+                </Card>
+              </Col>
+            </Row>
+          </Container>
         </Container>
       </>
     );
