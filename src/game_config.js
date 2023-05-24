@@ -11,3 +11,4 @@ export const exploringCost = {
     Energy: -1,
   },
 };
+export const logPage = 20; // length of the page
