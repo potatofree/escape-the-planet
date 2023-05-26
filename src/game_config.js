@@ -12,3 +12,10 @@ export const exploringCost = {
   },
 };
 export const logPage = 20; // length of the page
+// game initials
+export const initialState = {
+  materials: 0,
+  resources: { Air: 0, Food: 0, Energy: 0 },
+  counter: 0,
+  logPages: 1,
+};
