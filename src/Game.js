@@ -6,6 +6,7 @@ import Col from "react-bootstrap/Col";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Card from "react-bootstrap/Card";
+import Alert from "react-bootstrap/Alert";
 import {
   materialsGatheringIncrement,
   resourcesGainingIncrement,
@@ -24,8 +25,17 @@ export const Game = (props) => {
   const [exploring, setExploring] = useState(false);
   const [exploringLogs, setExploringLogs] = useState([]);
   const [logPages, setLogPages] = useState(initialState.logPages);
+  const [showAlert, setShowAlert] = useState(false);
 
   const counterInc = () => setCounter((counter) => counter + 1);
+
+  const checkCosts = (available, cost) => {
+    for (let res in cost) {
+      if (Math.abs(cost[res]) > available[res]) return false;
+    }
+    return true;
+  };
+
   const resourcesUpdate = (cost) => {
     setResources((resources) => {
       let newResources = {};
@@ -82,24 +92,35 @@ export const Game = (props) => {
   };
 
   const handleExploringWalk = () => {
-    resourcesUpdate(exploringCost.Walk);
-    setExploringLogs((exploringLogs) => {
-      const stepNumber = exploringLogs[0].stepNumber + 1;
-      return [
-        { stepNumber: stepNumber, step: "You went further" },
-        ...exploringLogs,
-      ];
-    });
+    if (checkCosts(resources, exploringCost.Walk)) {
+      setShowAlert(false);
+      resourcesUpdate(exploringCost.Walk);
+      setExploringLogs((exploringLogs) => {
+        const stepNumber = exploringLogs[0].stepNumber + 1;
+        return [
+          { stepNumber: stepNumber, step: "You went further" },
+          ...exploringLogs,
+        ];
+      });
+    } else {
+      setShowAlert(true);
+      return null;
+    }
   };
   const handleExploringSearch = () => {
-    resourcesUpdate(exploringCost.Search);
-    setExploringLogs((exploringLogs) => {
-      const stepNumber = exploringLogs[0].stepNumber + 1;
-      return [
-        { stepNumber: stepNumber, step: "You've looked around" },
-        ...exploringLogs,
-      ];
-    });
+    if (checkCosts(resources, exploringCost.Search)) {
+      resourcesUpdate(exploringCost.Search);
+      setExploringLogs((exploringLogs) => {
+        const stepNumber = exploringLogs[0].stepNumber + 1;
+        return [
+          { stepNumber: stepNumber, step: "You've looked around" },
+          ...exploringLogs,
+        ];
+      });
+    } else {
+      setShowAlert(true);
+      return null;
+    }
   };
   const showMoreLogs = () => {
     setLogPages((pages) => pages + 1);
@@ -183,6 +204,11 @@ export const Game = (props) => {
                     {exploring ? (
                       <>
                         <Card.Header as="h5">Exploration</Card.Header>
+                        {showAlert ? (
+                          <Alert variant="danger">
+                            You have not enough resources
+                          </Alert>
+                        ) : null}
                         <Card.Body>
                           <div className="exploring-logs">
                             {exploringLogs.map((e) => (
