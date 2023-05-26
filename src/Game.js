@@ -93,7 +93,6 @@ export const Game = (props) => {
 
   const handleExploringWalk = () => {
     if (checkCosts(resources, exploringCost.Walk)) {
-      setShowAlert(false);
       resourcesUpdate(exploringCost.Walk);
       setExploringLogs((exploringLogs) => {
         const stepNumber = exploringLogs[0].stepNumber + 1;
@@ -122,6 +121,7 @@ export const Game = (props) => {
       return null;
     }
   };
+  useEffect(() => setShowAlert(false), [exploring, exploringLogs]);
   const showMoreLogs = () => {
     setLogPages((pages) => pages + 1);
   };
