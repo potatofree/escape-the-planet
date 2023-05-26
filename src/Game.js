@@ -12,17 +12,18 @@ import {
   exploringResourcesLimit,
   exploringCost,
   logPage,
+  initialState,
 } from "./game_config";
 import { logsReducer } from "./logsReducer";
 
 export const Game = (props) => {
-  const [materials, setMaterials] = useState(0);
-  const [resources, setResources] = useState({ Air: 0, Food: 0, Energy: 0 });
-  const [counter, setCounter] = useState(0);
+  const [materials, setMaterials] = useState(initialState.materials);
+  const [resources, setResources] = useState(initialState.resources);
+  const [counter, setCounter] = useState(initialState.counter);
   const [logs, dispatchLogs] = useReducer(logsReducer, []);
   const [exploring, setExploring] = useState(false);
   const [exploringLogs, setExploringLogs] = useState([]);
-  const [logPages, setLogPages] = useState(1);
+  const [logPages, setLogPages] = useState(initialState.logPages);
 
   const counterInc = () => setCounter((counter) => counter + 1);
   const resourcesUpdate = (cost) => {
@@ -127,7 +128,7 @@ export const Game = (props) => {
     return [...shownLogs, showMore];
   };
 
-  if (props.gameState)
+  if (props.gameState === "started")
     return (
       <>
         <Navbar sticky="top" bg="light">
@@ -222,5 +223,13 @@ export const Game = (props) => {
         </Container>
       </>
     );
-  else return null;
+  else if (props.gameState === "finished") {
+    return (
+      <>
+        <h4>Here should be last game stats</h4>
+      </>
+    );
+  } else {
+    return null;
+  }
 };

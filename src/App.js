@@ -7,10 +7,24 @@ import React, { useState } from "react";
 import { Game } from "./Game";
 import { Container } from "react-bootstrap";
 
+const gameStateNext = (gameState) => {
+  switch (gameState) {
+    case "started": {
+      return "finished";
+    }
+    case "finished": {
+      gameKey = new Date().getTime();
+      return "started";
+    }
+    default:
+      return "started";
+  }
+};
+let gameKey = new Date().getTime();
 const App = () => {
-  const [gameState, setGameState] = useState(false);
+  const [gameState, setGameState] = useState("not started");
   const handleStartButtonClick = () => {
-    setGameState(!gameState);
+    setGameState(gameStateNext(gameState));
   };
 
   return (
@@ -25,16 +39,16 @@ const App = () => {
           <Button
             className="Start-Game-button"
             onClick={handleStartButtonClick}
-            variant={gameState ? "danger" : "primary"}
+            variant={gameState === "started" ? "danger" : "primary"}
           >
-            {gameState ? "Stop the Game" : "Start the Game"}
+            {gameState === "started" ? "Stop the Game" : "Start the Game"}
           </Button>
         </Container>
       </Navbar>
 
       <body>
-        <Game gameState={gameState} />
-        {gameState ? null : <p>What about game?</p>}
+        <Game gameState={gameState} key={gameKey} />
+        {gameState === "started" ? null : <p>What about game?</p>}
       </body>
     </div>
   );
